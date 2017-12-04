@@ -4,7 +4,7 @@
 Command line utility facilitating the Ivy Lee time management method
 
 <h2>On The Ivy Lee Method</h2>
-<img src="./ivy_lee.png">
+<img src="./ivy_lee.png" height="300px" center>
 <p><a href="https://en.wikipedia.org/wiki/Ivy_Lee">Ivy Ledbetter Lee</a> was a publicity expert and consultant in the late 1800s and early 1900s. He is credited with the development of what's become know as the Ivy Lee time management method.</p>
 
 <p>The Ivy Lee method can be summarized as follows:</p>
