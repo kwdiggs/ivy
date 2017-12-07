@@ -216,7 +216,7 @@ def main():
     except IndexError:
         print('Command required. Please enter a command in the form: ivy <x>, where <x> is one of:\n'
               + str(sort_options_keys()))
-        exit(1)
+        raise SystemExit
 
     try:
         command = options[option]
