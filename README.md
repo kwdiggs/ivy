@@ -11,7 +11,7 @@ Command line utility facilitating the Ivy Lee time management method
 <ul>
   <li>Before leaving work each day, write the 6 most important things you must do tomorrow.</li>
   <li>Evaluate and sort them based on their absolute priority.</li>
-  <li>Arriving at work each day, begin the first item on the list and do not move on to the second until the first is completed.</li>
+  <li>Arriving at work each day, begin the first item on the list and do not move on to the next item until the previous one is completed.</li>
   <li>As the workday expires, move any unfinished items to a new list and repeat this procedure.</li>
 </ul>
 <p>The power of the method is that it requires the user to prioritize tasks, properly focus on one task at a time, and is so simple that it isn't a distraction in itself.</p>
