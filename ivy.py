@@ -2,6 +2,7 @@
 import sys
 import os
 import re
+import textwrap
 
 version_no = '1.0.1'
 
@@ -24,41 +25,53 @@ def read_list_from_file():
 
 # application reference.
 def about():
-    print('ivy ' + version_no + ' by Keenan Diggs\nContribute! https://github.com/kwdiggs/ivy')
+    print(f'ivy {version_no} by Keenan Diggs\nContribute! https://github.com/kwdiggs/ivy')
 
 
-def help():
-    print('>>>>>>>>>> ivy usage guide <<<<<<<<<<\n-------------------------------------')
-    print('|-> ivy project info:\t ivy about')
-    print('|-> marking items done:\t ivy check <num>, where <num> is an item\'s position in the list')
-    print('|-> deleting an item:\t ivy erase <num>, where <num> is an item\'s position in the list')
-    print('|-> this dialog:\t ivy help')
-    print('|-> viewing the list:\t ivy list')
-    print('|-> deleting all items:\t ivy new')
-    print('|-> rewriting items:\t ivy rewrite <num> "new item description"'
-          ', where <num> is an item\'s position in the list.')
-    print('|-> reordering items:\t ivy put <num> <num2>, '
-          'where <num> is the position of an item and <num2> is the position to move it to')
-    print('|-> marking items todo:\t ivy uncheck <num>, where <num> is an item\'s position in the list')
-    print('|-> adding new items:\t ivy write \"text description of work item\", with quoted text')
+def help_menu():
+    print(textwrap.dedent(
+        """\
+        >>>>>>>>>> ivy usage guide <<<<<<<<<<
+        -------------------------------------
+        |-> ivy project info:   ivy about
+        |-> marking items done: ivy check <num>, where <num> is an item's position in the list
+        |-> deleting an item:   ivy erase <num>, where <num> is an item's position in the list
+        |-> this dialog:        ivy help
+        |-> viewing the list:   ivy list
+        |-> deleting all items: ivy new
+        |-> rewriting items:    ivy rewrite <num> 'new item description', where <num> is an item's position in the list.
+        |-> reordering items:   ivy put <num> <num2>, where <num> is the position of an item and <num2> is the position 
+                                to move it to
+        |-> marking items todo: ivy uncheck <num>, where <num> is an item's position in the list
+        |-> adding new items:   ivy write 'text description of work item', with quoted text\
+        """
+    ))
 
 
 # ivy list operations.
 # [C]reate
 def write():
     if len(work_items) >= 6:
-        print("The Ivy Lee method dictates that no more than 6 items shall be on the list.")
-        print("Please ensure that you have chosen 6 items with the truly highest importance.")
+        print(textwrap.dedent(
+            """\
+            The Ivy Lee method dictates that no more than 6 items shall be on the list.
+            Please ensure that you have chosen 6 items with the truly highest importance.\
+            """
+        ))
         return
 
     item = sys.argv[2].strip()
 
     if item:
-        work_items.append('( ) ' + item + '\n')
+        work_items.append(f'( ) {item}\n')
         write_list_to_file()
     else:
-        print('Attempted to add item to list, but an invalid item was given.')
-        print('Please add items using the form: ivy write \"example todo item\" (in quotes)')
+        print(textwrap.dedent(
+            """\
+            Attempted to add item to list, but an invalid item was given.
+            Please add items using the form: ivy write 'example todo item' (in quotes)\
+            """
+        ))
 
 
 # [R]ead
@@ -68,14 +81,14 @@ def print_items():
         return
 
     for i, item in enumerate(work_items):
-        item = '{0}. {1}'.format(i + 1, item)
+        item = f'{i + 1}. {item}'
         sys.stdout.write(item)
 
 
 # [U]pdate
 def rewrite():
     def to_int_lambda(integer):
-        return to_int(integer, 'rewrite', ' "new item description"')
+        return to_int(integer, 'rewrite', ' \'new item description\'')
 
     item_number = to_int_lambda(sys.argv[2])
 
@@ -83,11 +96,11 @@ def rewrite():
         return
 
     if not index_exists(item_number - 1):
-        print('There is no item at position ' + str(item_number))
+        print(f'There is no item at position {item_number}')
         return
 
     if len(sys.argv) < 4:
-        to_int_lambda('new item not given, print correct usage')
+        to_int_lambda('new item not given, force display usage')
         return
 
     old_item = work_items[item_number - 1]
@@ -104,8 +117,7 @@ def move():
         return to_int(integer, 'put', ' <num2>', ' and <num2> is the position to move it to')
 
     if len(sys.argv) < 4:
-        print('Too few arguments.')
-        to_int_lambda('incorrect number of argument, show usage')
+        to_int_lambda('incorrect number of argument, force display usage')
         return
 
     old_position = to_int_lambda(sys.argv[2])
@@ -113,7 +125,7 @@ def move():
         return
 
     if not index_exists(old_position - 1):
-        print('No item at position ' + str(old_position))
+        print(f'No item at position {old_position}')
         return
 
     new_position = to_int_lambda(sys.argv[3])
@@ -140,7 +152,7 @@ def check(*args):
         return
 
     if not index_exists(item_number - 1):
-        print('No item at position ' + str(item_number))
+        print(f'No item at position {item_number}')
         return
 
     regex = re.compile('^' + re.escape(capture_string))
@@ -164,7 +176,7 @@ def erase():
         return
 
     if not index_exists(item_number - 1):
-        print('There is no item at position ' + str(item_number) + '.')
+        print(f'There is no item at position {item_number}.')
         return
 
     work_items.pop(item_number - 1)
@@ -180,8 +192,8 @@ def to_int(number, name, description='', final_clause=''):
     try:
         return int(number)
     except ValueError:
-        print(name + ' usage: ivy ' + name + ' <num>' + description
-              + ', where <num> is an integer representing an item\'s position in the list' + final_clause)
+        print(f'{name} usage: ivy {name} <num>{description}, '
+              f'where <num> is an integer representing an item\'s position in the list{final_clause}')
         return
 
 
@@ -195,7 +207,7 @@ options = {
     'about': about,
     'check': check,
     'erase': erase,
-    'help': help,
+    'help': help_menu,
     'list': print_items,
     'move': move,
     'new': new_list,
@@ -214,17 +226,18 @@ def main():
     try:
         option = sys.argv[1]
     except IndexError:
-        print('Command required. Please enter a command in the form: ivy <x>, where <x> is one of:\n'
-              + str(sort_options_keys()))
+        print('Command required. Please enter a command in the form: ivy <x>, '
+              f'where <x> is one of:\n{sort_options_keys()}')
         raise SystemExit
 
     try:
         command = options[option]
     except KeyError:
-        print('\'' + option + '\' is not a recognized command. Commands are:\n' + str(sort_options_keys()))
+        print(f'\'{option}\' is not a recognized command. Commands are:\n{sort_options_keys()}')
     else:
         command(True) if option == 'check' else command()
 
 
 # so it begins
-main()
+if __name__ == "__main__":
+    main()
